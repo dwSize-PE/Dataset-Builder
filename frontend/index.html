@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>YOLO Dataset Builder</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="dashboard">
+        <header class="top-bar">
+            <div class="logo">
+                <span class="logo-icon">⬡</span>
+                <h1>YOLO DATASET BUILDER</h1>
+            </div>
+            <div class="top-bar-credits">Desenvolvido por <strong>Leonardo de Souza Melo</strong></div>
+        </header>
+
+        <main class="dashboard-content">
+            <!-- Create Project -->
+            <section class="card create-project-card">
+                <h2>Novo Projeto</h2>
+                <div class="form-group">
+                    <label>Nome do Dataset</label>
+                    <input type="text" id="project-name" placeholder="ex: Pessoa_Caida_Detection">
+                </div>
+                <div class="form-group">
+                    <label>Classes (separadas por vírgula)</label>
+                    <input type="text" id="project-classes" placeholder="ex: pessoa_caida, pessoa_em_pe">
+                </div>
+                <button id="btn-create-project" class="btn btn-primary">Criar Projeto</button>
+            </section>
+
+            <!-- Project List -->
+            <section class="card">
+                <h2>Projetos</h2>
+                <div id="projects-list" class="projects-grid">
+                    <!-- Populated by JS -->
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script src="/static/js/api.js"></script>
+    <script>
+        const projectsList = document.getElementById('projects-list');
+        const btnCreate = document.getElementById('btn-create-project');
+
+        async function loadProjects() {
+            const projects = await API.getProjects();
+            if (projects.length === 0) {
+                projectsList.innerHTML = '<p class="empty-msg">Nenhum projeto criado ainda.</p>';
+                return;
+            }
+            projectsList.innerHTML = projects.map(p => `
+                <div class="project-card">
+                    <div class="project-header">
+                        <h3>${p.name}</h3>
+                        <button class="btn btn-sm btn-danger" onclick="deleteProject('${p.name}')">✕</button>
+                    </div>
+                    <div class="project-classes">
+                        ${p.classes.map(c => `<span class="class-tag">${c}</span>`).join('')}
+                    </div>
+                    <a href="/annotate/${p.name}" class="btn btn-primary btn-block">Abrir Anotador</a>
+                </div>
+            `).join('');
+        }
+
+        btnCreate.addEventListener('click', async () => {
+            const name = document.getElementById('project-name').value.trim();
+            const classesRaw = document.getElementById('project-classes').value.trim();
+
+            if (!name || !classesRaw) {
+                alert('Preencha o nome e as classes.');
+                return;
+            }
+
+            const classes = classesRaw.split(',').map(c => c.trim()).filter(c => c);
+            if (classes.length === 0) {
+                alert('Adicione pelo menos uma classe.');
+                return;
+            }
+
+            await API.createProject(name, classes);
+            document.getElementById('project-name').value = '';
+            document.getElementById('project-classes').value = '';
+            loadProjects();
+        });
+
+        async function deleteProject(name) {
+            if (!confirm(`Deletar projeto "${name}" e todos os dados?`)) return;
+            await API.deleteProject(name);
+            loadProjects();
+        }
+
+        loadProjects();
+    </script>
+</body>
+</html>

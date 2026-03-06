@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Anotador - YOLO Dataset Builder</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="annotator-layout">
+
+        <!-- LEFT SIDEBAR -->
+        <aside class="sidebar-left">
+            <div class="sidebar-section">
+                <div class="sidebar-logo">
+                    <span class="logo-icon">⬡</span>
+                    <span class="logo-text">YOLO DATASET BUILDER</span>
+                </div>
+                <div class="project-name-display">
+                    Dataset: <strong id="project-name-label">—</strong>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>CLASSES</h3>
+                <div id="classes-list"></div>
+                <div class="add-class-row">
+                    <input type="text" id="new-class-input" placeholder="Nova classe...">
+                    <button id="btn-add-class" class="btn btn-sm btn-primary">+</button>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>ESTATÍSTICAS</h3>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-label">Imagens</span>
+                        <span class="stat-value" id="stat-total">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Anotadas</span>
+                        <span class="stat-value" id="stat-annotated">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Puladas</span>
+                        <span class="stat-value" id="stat-skipped">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-label">Bounding Boxes</span>
+                        <span class="stat-value" id="stat-boxes">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-section">
+                <h3>EXPORTAR</h3>
+                <div class="form-group compact">
+                    <label>Train / Val / Test</label>
+                    <div class="split-inputs">
+                        <input type="number" id="split-train" value="80" min="0" max="100" step="5">
+                        <input type="number" id="split-val" value="15" min="0" max="100" step="5">
+                        <input type="number" id="split-test" value="5" min="0" max="100" step="5">
+                    </div>
+                </div>
+                <div class="form-group compact">
+                    <label>Resize (opcional)</label>
+                    <input type="number" id="export-imgsize" placeholder="640" min="32" step="32">
+                </div>
+                <button id="btn-export" class="btn btn-primary btn-block">Exportar YOLO</button>
+            </div>
+
+            <div class="sidebar-section">
+                <a href="/" class="btn btn-secondary btn-block">← Voltar</a>
+            </div>
+
+            <div class="sidebar-credits">
+                Desenvolvido por <strong>Leonardo de Souza Melo</strong>
+            </div>
+        </aside>
+
+        <!-- CENTER: TOOLBAR + CANVAS -->
+        <main class="annotator-main">
+            <!-- TOOLBAR -->
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <span id="frame-counter" class="frame-counter">Frame 0 de 0</span>
+                </div>
+                <div class="toolbar-center">
+                    <button id="btn-mode-box" class="tool-btn active" title="Modo Caixa (B)">☐ Caixa (B)</button>
+                    <button id="btn-save" class="tool-btn" title="Salvar (Ctrl+S)">💾 Salvar</button>
+                    <button id="btn-skip" class="tool-btn" title="Pular Frame (X)">⏭ Pular (X)</button>
+                    <button id="btn-undo" class="tool-btn" title="Desfazer (Ctrl+Z)">↩ Desfazer</button>
+                    <button id="btn-clear" class="tool-btn" title="Limpar Tudo">🗑 Limpar</button>
+                    <button id="btn-delete-frame" class="tool-btn" title="Excluir Frame (Shift+Del)" style="color:#ef4444">🗑 Excluir Frame</button>
+                </div>
+                <div class="toolbar-right">
+                    <label class="skip-label" title="Pular N frames ao navegar com setas">Pular:
+                        <select id="nav-skip-select">
+                            <option value="1" selected>1</option>
+                            <option value="5">5</option>
+                            <option value="10">10</option>
+                            <option value="15">15</option>
+                            <option value="20">20</option>
+                            <option value="30">30</option>
+                            <option value="50">50</option>
+                        </select>
+                    </label>
+                    <button id="btn-upload" class="tool-btn btn-upload" title="Upload mídia">📁 Upload</button>
+                    <input type="file" id="file-input" multiple accept="image/*,video/*" style="display:none">
+                </div>
+            </div>
+
+            <!-- CANVAS AREA -->
+            <div class="canvas-wrapper" id="canvas-wrapper">
+                <canvas id="annotation-canvas"></canvas>
+                <div class="drop-overlay" id="drop-overlay">
+                    <div class="drop-message">
+                        <span class="drop-icon">📁</span>
+                        <p>Solte imagens ou vídeos aqui</p>
+                    </div>
+                </div>
+                <div class="no-frames-msg" id="no-frames-msg">
+                    <span class="drop-icon">📁</span>
+                    <p>Nenhum frame carregado</p>
+                    <p>Arraste imagens/vídeos ou clique em Upload</p>
+                </div>
+            </div>
+
+
+
+            <!-- KEYBOARD SHORTCUTS GUIDE -->
+            <div class="shortcuts-panel" id="shortcuts-panel">
+                <h4>⌨ Atalhos</h4>
+                <div class="shortcut-item"><kbd>D</kbd> / <kbd>→</kbd> Avançar N frames</div>
+                <div class="shortcut-item"><kbd>A</kbd> / <kbd>←</kbd> Voltar N frames</div>
+                <div class="shortcut-item"><kbd>X</kbd> Pular frame (ruim)</div>
+                <div class="shortcut-item"><kbd>B</kbd> Modo caixa</div>
+                <div class="shortcut-item"><kbd>1-9</kbd> Selecionar classe</div>
+                <div class="shortcut-item"><kbd>Del</kbd> Remover bbox selecionada</div>
+                <div class="shortcut-item"><kbd>Ctrl+Z</kbd> Desfazer</div>
+                <div class="shortcut-item"><kbd>Ctrl+S</kbd> Salvar</div>
+                <div class="shortcut-item"><kbd>Esc</kbd> Cancelar desenho</div>
+                <div class="shortcut-item"><kbd>Shift+Del</kbd> Excluir frame atual</div>
+                <div class="shortcut-item"><kbd>H</kbd> Mostrar/ocultar atalhos</div>
+            </div>
+
+            <!-- BOTTOM: FRAME TIMELINE -->
+            <div class="timeline-bar">
+                <div class="timeline-info">
+                    <span id="timeline-progress">0 / 0 anotados</span>
+                    <span class="timeline-hint">Ctrl+Click = selecionar individual | Shift+Click = selecionar range</span>
+                </div>
+                <div class="bulk-actions-bar" id="bulk-actions-bar" style="display:none">
+                    <span id="bulk-count">0 selecionado(s)</span>
+                    <button class="btn btn-sm btn-danger" onclick="AppState.bulkDeleteFrames()">🗑 Excluir selecionados</button>
+                    <button class="btn btn-sm btn-secondary" onclick="AppState.bulkSkipFrames()">⏭ Pular selecionados</button>
+                    <button class="btn btn-sm btn-secondary" onclick="Timeline.clearSelection()">✕ Limpar seleção</button>
+                </div>
+                <div class="timeline-scroll" id="timeline-scroll">
+                    <!-- Thumbnails populated by JS -->
+                </div>
+            </div>
+        </main>
+    </div>
+
+
+
+    <!-- Upload progress overlay -->
+    <div class="upload-overlay" id="upload-overlay" style="display:none">
+        <div class="upload-progress-card">
+            <h3>Processando upload...</h3>
+            <div class="progress-bar"><div class="progress-fill" id="upload-progress-fill"></div></div>
+            <p id="upload-status">Enviando arquivos...</p>
+        </div>
+    </div>
+
+    <!-- Export result modal -->
+    <div class="modal-overlay" id="export-modal" style="display:none">
+        <div class="modal-card">
+            <h3>✅ Dataset Exportado</h3>
+            <div id="export-result"></div>
+            <button class="btn btn-primary" onclick="document.getElementById('export-modal').style.display='none'">Fechar</button>
+        </div>
+    </div>
+
+    <script src="/static/js/api.js"></script>
+    <script src="/static/js/canvas.js"></script>
+    <script src="/static/js/sidebar.js"></script>
+    <script src="/static/js/timeline.js"></script>
+    <script src="/static/js/shortcuts.js"></script>
+    <script src="/static/js/app.js"></script>
+</body>
+</html>
