@@ -26,6 +26,8 @@ O **YOLO Dataset Builder** é uma aplicação web local projetada para preparar 
 
 ---
 
+<img width="1907" height="912" alt="image" src="https://github.com/user-attachments/assets/9b615713-f571-45e9-a7fc-ff8e07de9905" />
+
 ## ✨ Funcionalidades
 
 | Funcionalidade | Descrição |
