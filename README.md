@@ -267,18 +267,6 @@ Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para ma
 
 ---
 
-## 👨‍💻 Autor
+## 👨‍💻 Desenvolvido por
 
-<table>
-  <tr>
-    <td align="center">
-      <strong>Leonardo de Souza Melo</strong><br>
-      <a href="mailto:souzaleonardomelo1@gmail.com">souzaleonardomelo1@gmail.com</a><br>
-      <a href="https://github.com/dwSize-PE">GitHub</a>
-    </td>
-  </tr>
-</table>
-
-<p align="center">
-  Desenvolvido com ☕ e Python por <strong>Leonardo de Souza Melo</strong> — <a href="https://camerite.com">Camerite</a>
-</p>
+**Leonardo de Souza Melo** — [@dwSize-PE](https://github.com/dwSize-PE)
