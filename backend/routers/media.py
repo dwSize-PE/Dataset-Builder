@@ -22,7 +22,6 @@ def _get_project_dir(name: str) -> Path:
 async def upload_media(
     project_name: str,
     files: list[UploadFile] = File(...),
-    frame_interval: int = Form(30),
 ):
     """Upload images and/or videos. Videos are auto-extracted into frames."""
     project_dir = _get_project_dir(project_name)
@@ -49,7 +48,7 @@ async def upload_media(
 
                 # Extract frames
                 info = get_video_info(raw_path)
-                saved = extract_frames(raw_path, frames_dir, frame_interval)
+                saved = extract_frames(raw_path, frames_dir)
                 all_saved.extend(saved)
                 video_info_list.append({
                     "filename": file.filename,

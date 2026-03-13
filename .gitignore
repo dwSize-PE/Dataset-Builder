@@ -13,10 +13,8 @@ env/
 .venv/
 .env/
 
-# Data - raw videos, extracted frames, thumbnails, exports
-data/*/raw/
-data/*/frames/
-data/*/thumbnails/
+# Data
+data/
 exports/
 
 # IDE

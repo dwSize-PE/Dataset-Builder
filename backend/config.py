@@ -14,7 +14,6 @@ VIDEO_EXTENSIONS = {".mp4", ".avi", ".mkv", ".mov", ".webm"}
 IMAGE_EXTENSIONS = {".jpg", ".jpeg", ".png", ".bmp", ".webp"}
 
 # Frame extraction
-DEFAULT_FRAME_INTERVAL = 30  # Extract 1 frame every 30 frames
 MAX_FRAME_DIMENSION = 1920   # Max width/height for extracted frames
 
 # Class colors palette (20 distinct colors)

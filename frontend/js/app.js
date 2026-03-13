@@ -219,10 +219,10 @@ const AppState = {
     },
 
     async _uploadFiles(fileList) {
-        await this._doUpload(fileList, 30);
+        await this._doUpload(fileList);
     },
 
-    async _doUpload(fileList, frameInterval) {
+    async _doUpload(fileList) {
         const uploadOverlay = document.getElementById('upload-overlay');
         const progressFill = document.getElementById('upload-progress-fill');
         const statusText = document.getElementById('upload-status');
@@ -233,7 +233,7 @@ const AppState = {
 
         try {
             progressFill.style.width = '60%';
-            const result = await API.uploadMedia(this.projectName, fileList, frameInterval);
+            const result = await API.uploadMedia(this.projectName, fileList);
 
             progressFill.style.width = '90%';
             statusText.textContent = `Processando ${result.total_frames_added} frames...`;

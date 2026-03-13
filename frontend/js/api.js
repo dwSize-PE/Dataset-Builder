@@ -45,12 +45,11 @@ const API = {
     },
 
     // ---- Media ----
-    async uploadMedia(projectName, files, frameInterval = 30) {
+    async uploadMedia(projectName, files) {
         const formData = new FormData();
         for (const file of files) {
             formData.append('files', file);
         }
-        formData.append('frame_interval', frameInterval);
 
         const res = await fetch(`/api/projects/${encodeURIComponent(projectName)}/media/upload`, {
             method: 'POST',

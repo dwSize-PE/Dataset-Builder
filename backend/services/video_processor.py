@@ -1,16 +1,15 @@
 """Video processing: frame extraction with OpenCV."""
 import cv2
 from pathlib import Path
-from ..config import DEFAULT_FRAME_INTERVAL, MAX_FRAME_DIMENSION, THUMBNAIL_SIZE
+from ..config import MAX_FRAME_DIMENSION, THUMBNAIL_SIZE
 from PIL import Image
 
 
 def extract_frames(
     video_path: Path,
     output_dir: Path,
-    frame_interval: int = DEFAULT_FRAME_INTERVAL,
 ) -> list[str]:
-    """Extract frames from a video file.
+    """Extract ALL frames from a video file sequentially.
 
     Returns list of saved frame filenames.
     """
@@ -19,9 +18,7 @@ def extract_frames(
     if not cap.isOpened():
         raise ValueError(f"Cannot open video: {video_path}")
 
-    total_frames = int(cap.get(cv2.CAP_PROP_FRAME_COUNT))
     saved = []
-    frame_idx = 0
     save_idx = _get_next_index(output_dir)
 
     while True:
@@ -29,17 +26,13 @@ def extract_frames(
         if not ret:
             break
 
-        if frame_idx % frame_interval == 0:
-            # Resize if too large
-            frame = _resize_frame(frame)
-            filename = f"frame_{save_idx:06d}.jpg"
-            filepath = output_dir / filename
-            cv2.imwrite(str(filepath), frame, [cv2.IMWRITE_JPEG_QUALITY, 95])
-            _generate_thumbnail(filepath, output_dir.parent / "thumbnails")
-            saved.append(filename)
-            save_idx += 1
-
-        frame_idx += 1
+        frame = _resize_frame(frame)
+        filename = f"frame_{save_idx:06d}.jpg"
+        filepath = output_dir / filename
+        cv2.imwrite(str(filepath), frame, [cv2.IMWRITE_JPEG_QUALITY, 95])
+        _generate_thumbnail(filepath, output_dir.parent / "thumbnails")
+        saved.append(filename)
+        save_idx += 1
 
     cap.release()
     return saved
