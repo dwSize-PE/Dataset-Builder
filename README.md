@@ -1,7 +1,7 @@
 # ⬡ YOLO Dataset Builder
 
 <p align="center">
-  <strong>Ferramenta web local para criar datasets de treinamento no formato YOLO</strong>
+  <strong>Local web tool for creating training datasets in YOLO format</strong>
 </p>
 
 <p align="center">
@@ -13,105 +13,105 @@
 
 ---
 
-## 📋 Sobre o Projeto
+## 📋 About the Project
 
-O **YOLO Dataset Builder** é uma aplicação web local projetada para preparar datasets de imagens e vídeos para treinamento de modelos **YOLOv8/v11**. A ferramenta permite importar mídias, anotar objetos com bounding boxes, gerenciar classes e exportar tudo no formato YOLO pronto para treinar.
+**YOLO Dataset Builder** is a local web application designed to prepare image and video datasets for training **YOLOv8/v11** models. The tool allows you to import media, annotate objects with bounding boxes, manage classes, and export everything in YOLO format ready for training.
 
-### Por que usar?
+### Why use it?
 
-- **Sem dependência de serviços externos** — tudo roda localmente na sua máquina
-- **Escalável para múltiplos projetos** — detecção de pessoas, veículos, animais, etc.
-- **Exportação direta para YOLO** — gera `data.yaml` + estrutura `train/val/test` automaticamente
-- **Apenas frames anotados são exportados** — carregou 100 frames mas anotou 50? O dataset terá exatamente os 50 anotados
+- **No external service dependencies** — everything runs locally on your machine
+- **Scalable across multiple projects** — person detection, vehicles, animals, etc.
+- **Direct YOLO export** — automatically generates `data.yaml` + `train/val/test` structure
+- **Only annotated frames are exported** — loaded 100 frames but annotated 50? The dataset will contain exactly those 50 annotated frames
 
 ---
 
 <img width="1907" height="912" alt="image" src="https://github.com/user-attachments/assets/9b615713-f571-45e9-a7fc-ff8e07de9905" />
 
-## ✨ Funcionalidades
+## ✨ Features
 
-| Funcionalidade | Descrição |
+| Feature | Description |
 |---|---|
-| **Upload de imagens e vídeos** | Suporta JPG, PNG, BMP, WebP, MP4, AVI, MKV, MOV, WebM |
-| **Extração de frames** | Extrai frames automaticamente ao fazer upload de vídeos |
-| **Anotação com bounding boxes** | Desenhe caixas sobre os objetos diretamente no canvas |
-| **Multi-classe** | Suporte a múltiplas classes por imagem com cores distintas |
-| **Resize e drag de bboxes** | 8 handles de redimensionamento + arraste para reposicionar |
-| **Crosshair** | Guia visual em forma de cruz para anotação precisa |
-| **Undo (Ctrl+Z)** | Desfaz até 50 ações no canvas |
-| **Skip de frames** | Marque frames ruins que não devem ir para o dataset |
-| **Exclusão de frames** | Delete frames indesejados (individual ou em lote) |
-| **Multi-seleção na timeline** | Ctrl+Click (individual) e Shift+Click (range) para ações em lote |
-| **Exportação YOLO** | Split configurável Train/Val/Test com resize opcional |
-| **Navegação com skip** | Dropdown configurável para pular N frames por vez (1, 5, 10, 15, 20, 30, 50) |
-| **Atalhos de teclado** | Navegação e anotação rápidas sem tirar a mão do teclado |
+| **Image and video upload** | Supports JPG, PNG, BMP, WebP, MP4, AVI, MKV, MOV, WebM |
+| **Frame extraction** | Automatically extracts frames when uploading videos |
+| **Bounding box annotation** | Draw boxes around objects directly on the canvas |
+| **Multi-class** | Support for multiple classes per image with distinct colors |
+| **Resize and drag bboxes** | 8 resize handles + drag to reposition |
+| **Crosshair** | Cross-shaped visual guide for precise annotation |
+| **Undo (Ctrl+Z)** | Undo up to 50 canvas actions |
+| **Frame skipping** | Mark bad frames that should not be included in the dataset |
+| **Frame deletion** | Delete unwanted frames (individually or in bulk) |
+| **Multi-selection in timeline** | Ctrl+Click (individual) and Shift+Click (range) for bulk actions |
+| **YOLO export** | Configurable Train/Val/Test split with optional resize |
+| **Skip navigation** | Configurable dropdown to jump N frames at a time (1, 5, 10, 15, 20, 30, 50) |
+| **Keyboard shortcuts** | Fast navigation and annotation without lifting your hands from the keyboard |
 
 ---
 
-## ⌨️ Atalhos de Teclado
+## ⌨️ Keyboard Shortcuts
 
-| Atalho | Ação |
+| Shortcut | Action |
 |---|---|
-| `D` / `→` | Avançar N frames (configurável) |
-| `A` / `←` | Voltar N frames (configurável) |
-| `X` | Pular frame (marcar como ruim) |
-| `B` | Modo caixa (bounding box) |
-| `1-9` | Selecionar classe pelo número |
-| `Del` | Remover bbox selecionada |
-| `Shift+Del` | Excluir frame atual |
-| `Ctrl+Z` | Desfazer última ação |
-| `Ctrl+S` | Salvar anotação atual |
-| `Esc` | Cancelar desenho / desselecionar |
-| `H` | Mostrar/ocultar painel de atalhos |
+| `D` / `→` | Advance N frames (configurable) |
+| `A` / `←` | Go back N frames (configurable) |
+| `X` | Skip frame (mark as bad) |
+| `B` | Box mode (bounding box) |
+| `1-9` | Select class by number |
+| `Del` | Remove selected bbox |
+| `Shift+Del` | Delete current frame |
+| `Ctrl+Z` | Undo last action |
+| `Ctrl+S` | Save current annotation |
+| `Esc` | Cancel drawing / deselect |
+| `H` | Show/hide shortcuts panel |
 
 ---
 
-## 🏗️ Arquitetura
+## 🏗️ Architecture
 
 ```
 dataset-builder/
 ├── run.py                          # Entry point (uvicorn)
-├── requirements.txt                # Dependências Python
+├── requirements.txt                # Python dependencies
 ├── README.md
 │
 ├── backend/
-│   ├── main.py                     # App FastAPI + rotas estáticas
-│   ├── config.py                   # Constantes e configurações
+│   ├── main.py                     # FastAPI app + static routes
+│   ├── config.py                   # Constants and settings
 │   ├── models/
-│   │   └── schemas.py              # Modelos Pydantic (validação)
+│   │   └── schemas.py              # Pydantic models (validation)
 │   ├── routers/
-│   │   ├── projects.py             # CRUD de projetos
-│   │   ├── media.py                # Upload de mídia + listagem de frames
-│   │   ├── annotations.py          # Salvar/carregar anotações
-│   │   └── export.py               # Exportação YOLO
+│   │   ├── projects.py             # Project CRUD
+│   │   ├── media.py                # Media upload + frame listing
+│   │   ├── annotations.py          # Save/load annotations
+│   │   └── export.py               # YOLO export
 │   └── services/
-│       ├── video_processor.py      # Extração de frames com OpenCV
-│       ├── image_processor.py      # Importação e resize de imagens
-│       ├── annotation_manager.py   # Gerenciamento de anotações (JSON)
-│       └── dataset_exporter.py     # Conversão para formato YOLO
+│       ├── video_processor.py      # Frame extraction with OpenCV
+│       ├── image_processor.py      # Image import and resize
+│       ├── annotation_manager.py   # Annotation management (JSON)
+│       └── dataset_exporter.py     # Conversion to YOLO format
 │
 ├── frontend/
-│   ├── index.html                  # Dashboard (criar/listar projetos)
-│   ├── annotator.html              # Interface de anotação
+│   ├── index.html                  # Dashboard (create/list projects)
+│   ├── annotator.html              # Annotation interface
 │   ├── css/
-│   │   └── style.css               # Tema escuro completo
+│   │   └── style.css               # Full dark theme
 │   └── js/
-│       ├── api.js                  # Chamadas HTTP ao backend
-│       ├── app.js                  # Estado global e orquestração
-│       ├── canvas.js               # Canvas de anotação (desenho, resize, drag)
-│       ├── sidebar.js              # Classes, estatísticas, exportação
-│       ├── timeline.js             # Timeline de frames com multi-seleção
-│       └── shortcuts.js            # Atalhos de teclado
+│       ├── api.js                  # HTTP calls to backend
+│       ├── app.js                  # Global state and orchestration
+│       ├── canvas.js               # Annotation canvas (drawing, resize, drag)
+│       ├── sidebar.js              # Classes, statistics, export
+│       ├── timeline.js             # Frame timeline with multi-selection
+│       └── shortcuts.js            # Keyboard shortcuts
 │
-├── data/                           # Dados dos projetos (auto-criado)
-│   └── {projeto}/
-│       ├── frames/                 # Imagens/frames extraídos
-│       ├── thumbnails/             # Miniaturas para timeline
-│       └── annotations/            # Anotações em JSON
+├── data/                           # Project data (auto-created)
+│   └── {project}/
+│       ├── frames/                 # Extracted images/frames
+│       ├── thumbnails/             # Thumbnails for timeline
+│       └── annotations/            # Annotations in JSON
 │
-└── exports/                        # Datasets exportados (auto-criado)
-    └── {projeto}/
-        ├── data.yaml               # Config do dataset YOLO
+└── exports/                        # Exported datasets (auto-created)
+    └── {project}/
+        ├── data.yaml               # YOLO dataset config
         ├── train/
         │   ├── images/
         │   └── labels/
@@ -125,148 +125,148 @@ dataset-builder/
 
 ---
 
-## 🛠️ Tecnologias
+## 🛠️ Technologies
 
-| Tecnologia | Versão | Uso |
+| Technology | Version | Usage |
 |---|---|---|
-| **Python** | 3.11+ | Linguagem principal do backend |
-| **FastAPI** | 0.115 | Framework web assíncrono (API REST) |
-| **Uvicorn** | 0.30 | Servidor ASGI |
-| **OpenCV** | 4.10 (headless) | Extração de frames de vídeos |
-| **Pillow** | 10.4 | Processamento de imagens e thumbnails |
-| **PyYAML** | 6.0 | Geração do `data.yaml` para YOLO |
-| **HTML5 Canvas** | — | Renderização de anotações no browser |
-| **Vanilla JS** | ES6+ | Frontend modular sem frameworks |
+| **Python** | 3.11+ | Main backend language |
+| **FastAPI** | 0.115 | Asynchronous web framework (REST API) |
+| **Uvicorn** | 0.30 | ASGI server |
+| **OpenCV** | 4.10 (headless) | Video frame extraction |
+| **Pillow** | 10.4 | Image processing and thumbnails |
+| **PyYAML** | 6.0 | `data.yaml` generation for YOLO |
+| **HTML5 Canvas** | — | Annotation rendering in the browser |
+| **Vanilla JS** | ES6+ | Modular frontend without frameworks |
 
 ---
 
-## 🚀 Como Rodar
+## 🚀 How to Run
 
-### Pré-requisitos
+### Prerequisites
 
-- **Python 3.11+** instalado (recomendado via [pyenv](https://github.com/pyenv/pyenv))
-- **pip** (gerenciador de pacotes Python)
+- **Python 3.11+** installed (recommended via [pyenv](https://github.com/pyenv/pyenv))
+- **pip** (Python package manager)
 
-### Instalação
+### Installation
 
 ```bash
-# 1. Clone o repositório
-git clone https://github.com/seu-usuario/yolo-dataset-builder.git
+# 1. Clone the repository
+git clone https://github.com/your-username/yolo-dataset-builder.git
 cd yolo-dataset-builder
 
-# 2. (Opcional) Crie um ambiente virtual
+# 2. (Optional) Create a virtual environment
 python -m venv venv
 source venv/bin/activate  # Linux/Mac
 # venv\Scripts\activate   # Windows
 
-# 3. Instale as dependências
+# 3. Install dependencies
 pip install -r requirements.txt
 ```
 
-### Executando
+### Running
 
 ```bash
 python run.py
 ```
 
-O servidor inicia em **http://localhost:8000** — abra no navegador.
+The server starts at **http://localhost:8000** — open it in your browser.
 
-### Gerenciamento do Servidor
+### Server Management
 
 ```bash
-# Parar o servidor
+# Stop the server
 fuser -k 8000/tcp
 
-# Reiniciar
+# Restart
 fuser -k 8000/tcp; sleep 1; python run.py
 ```
 
 ---
 
-## 📖 Como Usar
+## 📖 How to Use
 
-### 1. Criar um Projeto
+### 1. Create a Project
 
-Na tela inicial, insira o **nome do projeto** e as **classes** de detecção (ex: `pessoa_caida`, `pessoa_em_pe`). Clique em **Criar Projeto**.
+On the home screen, enter the **project name** and the detection **classes** (e.g., `fallen_person`, `standing_person`). Click **Create Project**.
 
-### 2. Upload de Mídia
+### 2. Upload Media
 
-No anotador, clique em **📁 Upload** ou arraste arquivos para a tela:
-- **Imagens**: são importadas diretamente como frames
-- **Vídeos**: abre um modal para configurar o intervalo de extração de frames (ex: 1 frame a cada 30 = ~1 fps para vídeo de 30fps)
+In the annotator, click **📁 Upload** or drag files onto the screen:
+- **Images**: imported directly as frames
+- **Videos**: opens a modal to configure the frame extraction interval (e.g., 1 frame every 30 = ~1 fps for a 30fps video)
 
-### 3. Anotar Frames
+### 3. Annotate Frames
 
-1. Selecione a **classe** desejada na sidebar (ou tecle `1-9`)
-2. Desenhe uma **bounding box** ao redor do objeto no canvas
-3. Use os **handles** para ajustar tamanho e posição
-4. Navegue entre frames com `D`/`A` ou `→`/`←` (salva automaticamente)
-5. Marque frames ruins com `X` (skip)
+1. Select the desired **class** in the sidebar (or press `1-9`)
+2. Draw a **bounding box** around the object on the canvas
+3. Use the **handles** to adjust size and position
+4. Navigate between frames with `D`/`A` or `→`/`←` (saves automatically)
+5. Mark bad frames with `X` (skip)
 
-### 4. Multi-Seleção e Ações em Lote
+### 4. Multi-Selection and Bulk Actions
 
-Na timeline (parte inferior):
-- **Ctrl+Click** — seleciona/desseleciona frames individualmente
-- **Shift+Click** — seleciona um range de frames
-- Use os botões **Excluir selecionados** ou **Pular selecionados** na barra de ações
+In the timeline (bottom section):
+- **Ctrl+Click** — select/deselect frames individually
+- **Shift+Click** — select a range of frames
+- Use the **Delete selected** or **Skip selected** buttons in the action bar
 
-### 5. Exportar Dataset
+### 5. Export Dataset
 
-Na sidebar, configure o split **Train/Val/Test** (padrão: 80/15/5) e opcionalmente o **resize** das imagens. Clique em **Exportar YOLO**.
+In the sidebar, configure the **Train/Val/Test** split (default: 80/15/5) and optionally the image **resize**. Click **Export YOLO**.
 
-> ⚠️ **Apenas frames com anotações salvas são exportados.** Frames sem bbox ou marcados como "pulados" são ignorados.
+> ⚠️ **Only frames with saved annotations are exported.** Frames without bboxes or marked as "skipped" are ignored.
 
-O dataset é gerado em `exports/{projeto}/` com a estrutura padrão YOLO, pronto para uso com:
+The dataset is generated in `exports/{project}/` with the standard YOLO structure, ready to use with:
 
 ```python
 from ultralytics import YOLO
 
 model = YOLO("yolo11n.pt")
-model.train(data="exports/meu_projeto/data.yaml", epochs=100, imgsz=640)
+model.train(data="exports/my_project/data.yaml", epochs=100, imgsz=640)
 ```
 
-### Formato YOLO dos Labels
+### YOLO Label Format
 
-Cada arquivo `.txt` de label contém uma linha por objeto:
+Each `.txt` label file contains one line per object:
 
 ```
 class_id x_center y_center width height
 ```
 
-Todos os valores são **normalizados entre 0 e 1** em relação às dimensões da imagem.
+All values are **normalized between 0 and 1** relative to the image dimensions.
 
 ---
 
-## 📂 Formato do `data.yaml`
+## 📂 `data.yaml` Format
 
 ```yaml
-path: /caminho/absoluto/exports/meu_projeto
+path: /absolute/path/exports/my_project
 train: train/images
 val: val/images
 test: test/images
 names:
-  0: pessoa_caida
-  1: pessoa_em_pe
+  0: fallen_person
+  1: standing_person
 ```
 
 ---
 
-## 🤝 Contribuindo
+## 🤝 Contributing
 
-1. Faça um fork do projeto
-2. Crie uma branch para sua feature (`git checkout -b feature/minha-feature`)
-3. Commit suas mudanças (`git commit -m 'feat: minha feature'`)
-4. Push para a branch (`git push origin feature/minha-feature`)
-5. Abra um Pull Request
-
----
-
-## 📄 Licença
-
-Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+1. Fork the project
+2. Create a branch for your feature (`git checkout -b feature/my-feature`)
+3. Commit your changes (`git commit -m 'feat: my feature'`)
+4. Push to the branch (`git push origin feature/my-feature`)
+5. Open a Pull Request
 
 ---
 
-## 👨‍💻 Desenvolvido por
+## 📄 License
+
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+---
+
+## 👨‍💻 Developed by
 
 **Leonardo de Souza Melo** — [@dwSize-PE](https://github.com/dwSize-PE)
